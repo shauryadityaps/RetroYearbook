@@ -1,6 +1,20 @@
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import { PhotoEntry, Yearbook } from '../types';
 
+/**
+ * Strips non-WinAnsi characters (like emojis or special unicode glyphs)
+ * so standard PDF fonts (TimesRoman, Courier) never throw encoding exceptions.
+ */
+function sanitizeText(text: string): string {
+  if (!text) return '';
+  return text
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[\u201C\u201D]/g, '"')
+    .replace(/[\u2013\u2014]/g, '-')
+    .replace(/[^\x20-\x7E\n\r\t]/g, '')
+    .trim();
+}
+
 function formatFullDate(dateString: string): string {
   try {
     const [y, m, d] = dateString.split('-').map(Number);
@@ -129,29 +143,30 @@ export async function exportYearbookToPdf(
   });
 
   // Album Title
-  const titleText = yearbook.title.toUpperCase();
-  const titleWidth = fontSerif.widthOfTextAtSize(titleText, 26);
-  coverPage.drawText(titleText, {
+  const cleanTitle = sanitizeText(yearbook.title).toUpperCase();
+  const titleWidth = fontSerif.widthOfTextAtSize(cleanTitle, 24);
+  coverPage.drawText(cleanTitle, {
     x: Math.max(40, (PAGE_WIDTH - titleWidth) / 2),
     y: PAGE_HEIGHT - 130,
-    size: 26,
+    size: 24,
     font: fontSerif,
     color: colorDarkSepia
   });
 
   // Description
-  if (yearbook.description) {
-    const descWidth = fontRegular.widthOfTextAtSize(yearbook.description, 13);
-    coverPage.drawText(yearbook.description, {
+  const cleanDesc = sanitizeText(yearbook.description);
+  if (cleanDesc) {
+    const descWidth = fontRegular.widthOfTextAtSize(cleanDesc, 12);
+    coverPage.drawText(cleanDesc, {
       x: Math.max(40, (PAGE_WIDTH - descWidth) / 2),
       y: PAGE_HEIGHT - 160,
-      size: 13,
+      size: 12,
       font: fontRegular,
       color: colorMutedSepia
     });
   }
 
-  // Centerpiece Decorative Wax Seal Symbol
+  // Centerpiece Decorative Wax Seal Symbol (using safe WinAnsi 'YB' monogram)
   coverPage.drawCircle({
     x: PAGE_WIDTH / 2,
     y: PAGE_HEIGHT / 2 + 30,
@@ -167,10 +182,10 @@ export async function exportYearbookToPdf(
     borderWidth: 1.5
   });
 
-  coverPage.drawText('★', {
-    x: PAGE_WIDTH / 2 - 9,
-    y: PAGE_HEIGHT / 2 + 20,
-    size: 24,
+  coverPage.drawText('YB', {
+    x: PAGE_WIDTH / 2 - 16,
+    y: PAGE_HEIGHT / 2 + 21,
+    size: 22,
     font: fontSerif,
     color: colorGold
   });
@@ -223,8 +238,8 @@ export async function exportYearbookToPdf(
       const photo = pagePhotos[slot];
       const slotY = slot === 0 ? PAGE_HEIGHT - 60 : PAGE_HEIGHT / 2 - 30;
 
-      // Clean Date Header (No Calendar Emoji!)
-      const fullDateStr = formatFullDate(photo.dateString);
+      // Clean Date Header
+      const fullDateStr = sanitizeText(formatFullDate(photo.dateString));
       page.drawText(fullDateStr, {
         x: 48,
         y: slotY,
@@ -233,7 +248,8 @@ export async function exportYearbookToPdf(
         color: colorDarkSepia
       });
 
-      page.drawText(`Captured by ${photo.authorName || 'Friend'}`, {
+      const authorName = sanitizeText(photo.authorName || 'Friend');
+      page.drawText(`Captured by ${authorName}`, {
         x: 48,
         y: slotY - 14,
         size: 10,
@@ -274,8 +290,9 @@ export async function exportYearbookToPdf(
       }
 
       // Handwritten Caption below Polaroid
-      if (photo.caption) {
-        page.drawText(`"${photo.caption}"`, {
+      const cleanCaption = sanitizeText(photo.caption);
+      if (cleanCaption) {
+        page.drawText(`"${cleanCaption}"`, {
           x: polX + 16,
           y: polY + 20,
           size: 12,
@@ -325,7 +342,7 @@ export async function exportYearbookToPdf(
     color: colorMutedSepia
   });
 
-  backPage.drawText('Retro Yearbook • Nostalgic Scrapbook App', {
+  backPage.drawText('Retro Yearbook - Nostalgic Scrapbook App', {
     x: PAGE_WIDTH / 2 - 110,
     y: 60,
     size: 10,
@@ -341,7 +358,8 @@ export async function exportYearbookToPdf(
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `${yearbook.title.toLowerCase().replace(/\s+/g, '_')}_scrapbook.pdf`;
+  const fileSafeTitle = cleanTitle.toLowerCase().replace(/[^a-z0-9]/g, '_') || 'yearbook';
+  a.download = `${fileSafeTitle}_scrapbook.pdf`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
