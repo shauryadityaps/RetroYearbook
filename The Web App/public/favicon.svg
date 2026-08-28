@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="46" fill="#8B0000" stroke="#D4AF37" stroke-width="4"/>
+  <circle cx="50" cy="50" r="38" fill="none" stroke="#D4AF37" stroke-dasharray="3,3" stroke-width="2"/>
+  <text x="50" y="60" font-family="'Cinzel', serif" font-size="34" font-weight="bold" fill="#D4AF37" text-anchor="middle">YB</text>
+</svg>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="parchment_background">#FFF3EEEA</color>
+    <color name="parchment_card_surface">#FFEBE3D5</color>
+    <color name="antique_border">#FFB0A695</color>
+    <color name="saddle_leather">#FF776B5D</color>
+    <color name="dark_sepia_text">#FF2D251E</color>
+    <color name="muted_sepia_text">#FF776B5D</color>
+    <color name="date_stamp_amber">#FFE67E22</color>
+    <color name="wax_seal_red">#FF9E3B2B</color>
+    <color name="gold_foil">#FFD4AF37</color>
+</resources>

@@ -1,0 +1,19 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+  <!-- Outer Wax Edge -->
+  <path
+      android:fillColor="#FF9E3B2B"
+      android:pathData="M24,2 C12,2 2,12 2,24 C2,36 12,46 24,46 C36,46 46,36 46,24 C46,12 36,2 24,2z"/>
+  <!-- Inner Pressed Stamp Circle -->
+  <path
+      android:strokeColor="#55550000"
+      android:strokeWidth="1.5"
+      android:pathData="M24,7 C14.6,7 7,14.6 7,24 C7,33.4 14.6,41 24,41 C33.4,41 41,33.4 41,24 C41,14.6 33.4,7 24,7z"/>
+  <!-- Center Emblem (Check / Star) -->
+  <path
+      android:fillColor="#FFD4AF37"
+      android:pathData="M20,29.6 L13.4,23 L15.5,20.9 L20,25.4 L32.5,12.9 L34.6,15 L20,29.6z"/>
+</vector>

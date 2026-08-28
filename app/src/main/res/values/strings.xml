@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Retro Yearbook</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_yearbooks">Yearbooks</string>
+    <string name="nav_create_join">Create / Join</string>
+    <string name="default_web_client_id">100000000000-dummyclientid.apps.googleusercontent.com</string>
+</resources>

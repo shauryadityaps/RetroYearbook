@@ -1,0 +1,59 @@
+# ==========================================
+# 🔒 SECRETS & CREDENTIALS (NEVER COMMIT)
+# ==========================================
+*.env
+*.env.local
+*.env.*.local
+.env
+.env.local
+The Web App/.env
+The Web App/.env.local
+local.properties
+*.keystore
+*.jks
+
+# ==========================================
+# 📦 NODE & WEB BUILD ARTIFACTS
+# ==========================================
+node_modules/
+The Web App/node_modules/
+dist/
+The Web App/dist/
+The Web App/dist-ssr/
+The Web App/scratch/
+*.tsbuildinfo
+
+# ==========================================
+# 🤖 ANDROID & GRADLE BUILD ARTIFACTS
+# ==========================================
+.gradle/
+build/
+app/build/
+*/build/
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.aab
+*.zip
+
+# ==========================================
+# 💻 IDE & ENVIRONMENT METADATA
+# ==========================================
+.idea/
+.kotlin/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ==========================================
+# 🧠 AGENT SCRATCH & SYSTEM LOGS
+# ==========================================
+.agents/
+.system_generated/
+.tempmediaStorage/
+skills-lock.json

@@ -1,0 +1,30 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="280dp"
+    android:viewportWidth="200"
+    android:viewportHeight="280">
+  <!-- Book Base -->
+  <path
+      android:fillColor="#FF776B5D"
+      android:pathData="M16,4h168c6.6,0 12,5.4 12,12v248c0,6.6 -5.4,12 -12,12H16c-6.6,0 -12,-5.4 -12,-12V16C4,9.4 9.4,4 16,4z"/>
+  <!-- Spine Shadow -->
+  <path
+      android:fillColor="#22000000"
+      android:pathData="M4,4h24v272H4z"/>
+  <!-- Spine Line Accent -->
+  <path
+      android:fillColor="#33000000"
+      android:pathData="M26,4h4v272h-4z"/>
+  <!-- Outer Gold Border Stitching -->
+  <path
+      android:strokeColor="#FFD4AF37"
+      android:strokeWidth="1.5"
+      android:strokeLineCap="round"
+      android:pathData="M38,18h144v244H38z"/>
+  <!-- Inner Emboss Stitching -->
+  <path
+      android:strokeColor="#55D4AF37"
+      android:strokeWidth="1.0"
+      android:strokeLineCap="round"
+      android:pathData="M42,22h136v236H42z"/>
+</vector>

@@ -1,0 +1,182 @@
+:root {
+  --color-parchment-bg: #F7F2E7;
+  --color-parchment-surface: #EDE4D0;
+  --color-parchment-dark: #D9CDB0;
+  --color-saddle-leather: #59260B;
+  --color-deep-leather: #2B1810;
+  --color-antique-border: #C4B49A;
+  --color-gold-foil: #D4AF37;
+  --color-gold-foil-light: #F3E5AB;
+  --color-dark-sepia: #2B1810;
+  --color-muted-sepia: #6E5849;
+  --color-wax-red: #8B0000;
+  --color-wax-green: #2E7D32;
+  --color-datestamp-amber: #FF8C00;
+  --color-polaroid-paper: #FDFBF7;
+
+  --font-typewriter: 'Special Elite', 'Courier Prime', Courier, monospace;
+  --font-handwriting: 'Caveat', 'Patrick Hand', cursive;
+  --font-serif: 'Cinzel', Georgia, serif;
+  --font-digital: 'VT323', monospace;
+
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-deep-leather);
+  color: var(--color-dark-sepia);
+  font-family: var(--font-typewriter);
+  overflow-x: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-parchment-bg);
+  background-image: radial-gradient(rgba(139, 108, 77, 0.08) 1px, transparent 0);
+  background-size: 20px 20px;
+  position: relative;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-parchment-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-antique-border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-saddle-leather);
+}
+
+/* Leather Texture Utilities */
+.leather-card {
+  background: linear-gradient(135deg, #3D1C06 0%, #241104 100%);
+  border: 2px solid var(--color-gold-foil);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+  color: var(--color-gold-foil-light);
+}
+
+.parchment-card {
+  background-color: var(--color-parchment-surface);
+  border: 1.5px solid var(--color-antique-border);
+  box-shadow: 0 4px 12px rgba(43, 24, 16, 0.08);
+}
+
+/* Button & Press Effects */
+.btn-leather {
+  background: linear-gradient(180deg, #6A2F0F 0%, #471D06 100%);
+  color: #FFF;
+  border: 1.5px solid var(--color-gold-foil);
+  border-radius: 8px;
+  font-family: var(--font-typewriter);
+  font-weight: bold;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.2);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.btn-leather:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+}
+
+.btn-leather:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Polaroid Styling */
+.polaroid-frame {
+  background-color: var(--color-polaroid-paper);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 20px rgba(43, 24, 16, 0.15), 0 2px 6px rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.polaroid-frame:hover {
+  transform: translateY(-4px) rotate(-0.5deg);
+  box-shadow: 0 12px 28px rgba(43, 24, 16, 0.2);
+}
+
+/* Washi Tape Strip */
+.tape-strip {
+  width: 70px;
+  height: 22px;
+  background-color: rgba(237, 228, 208, 0.75);
+  border-left: 1.5px dashed rgba(196, 180, 154, 0.6);
+  border-right: 1.5px dashed rgba(196, 180, 154, 0.6);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  transform: rotate(-3deg);
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  margin-left: -35px;
+  z-index: 2;
+}
+
+/* Wax Seal Badge */
+.wax-seal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-family: var(--font-serif);
+  font-weight: bold;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35), inset 0 2px 3px rgba(255, 255, 255, 0.3);
+}
+
+.wax-seal-green {
+  background: radial-gradient(circle at 30% 30%, #388E3C, #1B5E20);
+  border: 2px solid #D4AF37;
+  color: #F3E5AB;
+}
+
+.wax-seal-red {
+  background: radial-gradient(circle at 30% 30%, #B71C1C, #5F0909);
+  border: 2px solid #D4AF37;
+  color: #F3E5AB;
+}
+
+/* Date Stamp Overlay */
+.amber-date-stamp {
+  font-family: var(--font-digital);
+  color: var(--color-datestamp-amber);
+  text-shadow: 0 0 4px rgba(255, 140, 0, 0.8), 0 0 8px rgba(255, 69, 0, 0.5);
+  letter-spacing: 2px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease forwards;
+}

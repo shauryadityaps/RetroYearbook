@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "675497952504",
+    "project_id": "yearbook-e59a3",
+    "storage_bucket": "yearbook-e59a3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:675497952504:android:4464531c0f7a52ddc5e70d",
+        "android_client_info": {
+          "package_name": "com.yearbook.retro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMPfYik7FLxNN2b3No64qU-CPxu8GsEGI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:675497952504:android:4464531c0f7a52ddc5e70d",
+        "android_client_info": {
+          "package_name": "RETRO.YEARBOOK"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMPfYik7FLxNN2b3No64qU-CPxu8GsEGI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
