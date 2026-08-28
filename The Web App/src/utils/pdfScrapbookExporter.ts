@@ -16,6 +16,52 @@ function formatFullDate(dateString: string): string {
   }
 }
 
+/**
+ * Converts any image format (.webp, .png, .jpg) to standard JPEG bytes via HTML5 Canvas
+ * so it can be reliably embedded into pdf-lib without format rejection.
+ */
+async function convertImageToJpegBytes(imageUrl: string): Promise<Uint8Array | null> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+
+    img.onload = () => {
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth || img.width;
+        canvas.height = img.naturalHeight || img.height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return resolve(null);
+
+        // Fill background white in case of transparency
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
+
+        canvas.toBlob(
+          async (blob) => {
+            if (!blob) return resolve(null);
+            const buffer = await blob.arrayBuffer();
+            resolve(new Uint8Array(buffer));
+          },
+          'image/jpeg',
+          0.92
+        );
+      } catch (err) {
+        console.warn('Canvas JPEG conversion failed:', err);
+        resolve(null);
+      }
+    };
+
+    img.onerror = (err) => {
+      console.warn('Failed to load image for PDF embedding:', imageUrl, err);
+      resolve(null);
+    };
+
+    img.src = imageUrl;
+  });
+}
+
 export async function exportYearbookToPdf(
   yearbook: Yearbook,
   photos: PhotoEntry[],
@@ -105,49 +151,29 @@ export async function exportYearbookToPdf(
     });
   }
 
-  // Cover Photo or Centerpiece Frame
-  const centerFrameW = 340;
-  const centerFrameH = 340;
-  const centerX = (PAGE_WIDTH - centerFrameW) / 2;
-  const centerY = PAGE_HEIGHT / 2 - 80;
+  // Centerpiece Decorative Wax Seal Symbol
+  coverPage.drawCircle({
+    x: PAGE_WIDTH / 2,
+    y: PAGE_HEIGHT / 2 + 30,
+    size: 50,
+    color: rgb(0.545, 0, 0) // Wax Seal Red
+  });
 
-  coverPage.drawRectangle({
-    x: centerX,
-    y: centerY,
-    width: centerFrameW,
-    height: centerFrameH,
-    color: colorDarkParchment,
+  coverPage.drawCircle({
+    x: PAGE_WIDTH / 2,
+    y: PAGE_HEIGHT / 2 + 30,
+    size: 44,
     borderColor: colorGold,
     borderWidth: 1.5
   });
 
-  if (photos.length > 0) {
-    try {
-      const firstPhoto = photos[0];
-      const imgBytes = await fetch(firstPhoto.photoUrl).then(res => res.arrayBuffer());
-      let embeddedImg;
-      if (firstPhoto.photoUrl.toLowerCase().includes('.png')) {
-        embeddedImg = await pdfDoc.embedPng(imgBytes);
-      } else {
-        embeddedImg = await pdfDoc.embedJpg(imgBytes);
-      }
-      coverPage.drawImage(embeddedImg, {
-        x: centerX + 12,
-        y: centerY + 12,
-        width: centerFrameW - 24,
-        height: centerFrameH - 24
-      });
-    } catch {
-      // Draw placeholder text if image fetch fails
-      coverPage.drawText('SEALED MEMORIES', {
-        x: centerX + 100,
-        y: centerY + 160,
-        size: 16,
-        font: fontTypewriterBold,
-        color: colorDarkSepia
-      });
-    }
-  }
+  coverPage.drawText('★', {
+    x: PAGE_WIDTH / 2 - 9,
+    y: PAGE_HEIGHT / 2 + 20,
+    size: 24,
+    font: fontSerif,
+    color: colorGold
+  });
 
   // Cover Bottom Details
   coverPage.drawText(`Total Memories Preserved: ${photos.length}`, {
@@ -232,28 +258,19 @@ export async function exportYearbookToPdf(
       });
 
       // Photo Image inside Polaroid
-      try {
-        const imgBytes = await fetch(photo.photoUrl).then(res => res.arrayBuffer());
-        let embedded;
-        if (photo.photoUrl.toLowerCase().includes('.png')) {
-          embedded = await pdfDoc.embedPng(imgBytes);
-        } else {
-          embedded = await pdfDoc.embedJpg(imgBytes);
+      const jpegBytes = await convertImageToJpegBytes(photo.photoUrl);
+      if (jpegBytes) {
+        try {
+          const embedded = await pdfDoc.embedJpg(jpegBytes);
+          page.drawImage(embedded, {
+            x: polX + 12,
+            y: polY + 45,
+            width: polW - 24,
+            height: polH - 57
+          });
+        } catch (embedErr) {
+          console.warn('Failed to embed JPG into PDF:', embedErr);
         }
-        page.drawImage(embedded, {
-          x: polX + 12,
-          y: polY + 45,
-          width: polW - 24,
-          height: polH - 57
-        });
-      } catch {
-        page.drawText('[Photo Memory]', {
-          x: polX + 90,
-          y: polY + 120,
-          size: 12,
-          font: fontTypewriter,
-          color: colorMutedSepia
-        });
       }
 
       // Handwritten Caption below Polaroid
@@ -284,25 +301,33 @@ export async function exportYearbookToPdf(
   });
 
   backPage.drawRectangle({
-    x: 30,
-    y: 30,
-    width: PAGE_WIDTH - 60,
-    height: PAGE_HEIGHT - 60,
+    x: 24,
+    y: 24,
+    width: PAGE_WIDTH - 48,
+    height: PAGE_HEIGHT - 48,
     borderColor: colorGold,
     borderWidth: 1.5
   });
 
-  backPage.drawText('TIME PASSES, BUT MEMORIES REMAIN.', {
-    x: PAGE_WIDTH / 2 - 130,
-    y: PAGE_HEIGHT / 2 + 20,
-    size: 13,
+  backPage.drawText('THE END OF THIS CHAPTER', {
+    x: PAGE_WIDTH / 2 - 95,
+    y: PAGE_HEIGHT / 2 + 40,
+    size: 14,
     font: fontSerif,
     color: colorDarkSepia
   });
 
-  backPage.drawText('Exported from Retro Yearbook', {
-    x: PAGE_WIDTH / 2 - 80,
-    y: PAGE_HEIGHT / 2 - 10,
+  backPage.drawText('Preserved forever in your personal archive.', {
+    x: PAGE_WIDTH / 2 - 115,
+    y: PAGE_HEIGHT / 2 + 15,
+    size: 11,
+    font: fontRegular,
+    color: colorMutedSepia
+  });
+
+  backPage.drawText('Retro Yearbook • Nostalgic Scrapbook App', {
+    x: PAGE_WIDTH / 2 - 110,
+    y: 60,
     size: 10,
     font: fontTypewriter,
     color: colorMutedSepia
@@ -316,11 +341,11 @@ export async function exportYearbookToPdf(
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  const cleanTitle = yearbook.title.trim().replace(/[^a-zA-Z0-9_-]/g, '_');
-  a.download = `${cleanTitle}_Scrapbook.pdf`;
+  a.download = `${yearbook.title.toLowerCase().replace(/\s+/g, '_')}_scrapbook.pdf`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+
   onProgress?.(1.0);
 }
