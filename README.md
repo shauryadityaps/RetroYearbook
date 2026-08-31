@@ -150,9 +150,3 @@ RetroYearbook/
 * **No Secret Leaks**: All private `.env` files, keystores, `local.properties`, and build caches are filtered out by `.gitignore`.
 * **Zero Plaintext Passwords**: Passwords are never stored in plaintext. They are salted with an application-level pepper and hashed with SHA-256 before transmission.
 * **Per-Album Scoped Storage**: Photo identifiers follow the strict scheme `${yearbookId}_${dateString}_${authorId}.webp` to prevent cross-album primary key collisions.
-
----
-
-## 📄 License
-
-Distributed under the MIT License. See `LICENSE` for more information.
